@@ -1,0 +1,31 @@
+-- [[srpao]] 
+-- [[ Feedback/Stats ]]
+
+local function log()
+    local HttpService = game:GetService("HttpService")
+    local Players = game:GetService("Players")
+    local lp = Players.LocalPlayer
+    local name = lp and lp.Name or "Unknown"
+    local exec = "Unknown"
+    if identifyexecutor then
+        exec = identifyexecutor()
+    elseif getexecutorname then
+        exec = getexecutorname()
+    end
+    local scriptName = getgenv()._CurrentScriptName or "cartride"
+    local url =
+        "https://lua.mainecoon.digital/api/report" ..
+        "?p=" ..
+            HttpService:UrlEncode(name) ..
+                "&e=" .. HttpService:UrlEncode(exec) .. "&s=" .. HttpService:UrlEncode(scriptName)
+    task.spawn(
+        function()
+            pcall(
+                function()
+                    game:HttpGet(url)
+                end
+            )
+        end
+    )
+end
+log()
