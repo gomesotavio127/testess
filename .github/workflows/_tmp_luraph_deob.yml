@@ -1,0 +1,32 @@
+name: Temporary Luraph Deobfuscation
+
+on:
+  push:
+    branches: [tmp/luraph-deob-20261005]
+
+jobs:
+  deobfuscate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+
+      - name: Checkout deobfuscator
+        uses: actions/checkout@v4
+        with:
+          repository: caomod2077/Deobfuscator-Luraph-V15
+          path: deobfuscator
+
+      - name: Run Luraph v15 deobfuscator
+        run: |
+          node deobfuscator/deob.js slaqaa -o deobfuscated.lua --timeout 180 --budget 60 --max-runs 20 --devirt-rounds 400
+          test -s deobfuscated.lua
+          wc -c deobfuscated.lua
+          head -n 40 deobfuscated.lua
+
+      - name: Upload recovered source
+        uses: actions/upload-artifact@v4
+        with:
+          name: luraph-deobfuscated
+          path: deobfuscated.lua
+          if-no-files-found: error
