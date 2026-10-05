@@ -1,8 +1,8 @@
 name: Temporary Luraph Deobfuscation
 
 on:
-  push:
-    branches: [tmp/luraph-deob-20261005]
+  pull_request:
+    branches: [main]
 
 jobs:
   deobfuscate:
@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Checkout target repo
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Checkout deobfuscator
         uses: actions/checkout@v4
